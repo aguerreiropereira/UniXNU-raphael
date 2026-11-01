@@ -8,7 +8,7 @@ name: build-raphael
 # tree and the Apple Device Tree (ADT) profile (1080x2340 panel).
 #
 # Two jobs:
-#   1. kernel  (macos-14): builds the SM8150 XNU 8796 kernel the SAME public way
+#   1. kernel  (macos-15): builds the SM8150 XNU 8796 kernel the SAME public way
 #      guacamole does -- via dipa-studio/ios-sweet + blacktop/darwin-xnu-build
 #      (MACHINE_CONFIG=SWEET). This is fully public; NO private defconfig needed.
 #   2. build   (ubuntu-latest): builds the Aloha UEFI firmware volume, packs the
@@ -45,8 +45,8 @@ permissions:
 
 jobs:
   kernel:
-    # XNU 8796 needs Xcode 15 (iig ABI) -> macos-14, like ios-sweet.
-    runs-on: macos-14
+    # XNU 8796 needs Xcode with iig ABI -> macos-15 runner.
+    runs-on: macos-15
     timeout-minutes: 240
     env:
       # Without MACOS_VERSION build.sh pops an interactive gum menu and dies
@@ -93,7 +93,10 @@ jobs:
           # build.sh only checks that xcodes exists (Xcode is preinstalled); stub it
           printf '#!/bin/sh\nexit 0\n' | sudo tee /usr/local/bin/xcodes >/dev/null
           sudo chmod +x /usr/local/bin/xcodes
-          XC=$(ls -d /Applications/Xcode_*.app | sort -V | head -1)
+          XC=$(ls -d /Applications/Xcode_15*.app 2>/dev/null | head -1)
+          if [ -z "$XC" ]; then
+            XC=$(ls -d /Applications/Xcode_*.app | sort -V | head -1)
+          fi
           echo "DEVELOPER_DIR=$XC/Contents/Developer" >> "$GITHUB_ENV"
           sudo xcode-select -s "$XC"
           xcodebuild -version
