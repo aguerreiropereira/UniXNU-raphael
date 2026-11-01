@@ -87,10 +87,8 @@ kernel_args = [
 [payload.adt]
 tool = "scripts/make-raphael-adt.py"
 unique_chip_id = "required"
-# Match the working guacamole shim window. raphael has 6/8 GiB DRAM; 3 GiB also
-# gives XNU the full kernel-managed RAM range and reserves enough early I/O
-# page tables for the framebuffer.
-owned_memory_size = "0xc0000000"
+# This checkout targets the 6 GiB Redmi K20 Pro variant.
+owned_memory_size = "0x80000000"
 
 [bootimg.image]
 base = 0x0

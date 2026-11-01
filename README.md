@@ -54,7 +54,7 @@ fastboot boot boot-raphael.img
 > The `ios-root-hfs` workflow builds the image with the upstream bring-up
 > tweaks applied and publishes it as a release.
 
-If your device has **6 GB** of RAM (instead of 8 GB), open `board.toml` and lower `payload.adt.owned_memory_size` (e.g. `0x80000000`) before building.
+This checkout is configured for the **6 GB** variant: `payload.adt.owned_memory_size` is set to `0x80000000` in `board.toml`. For an 8 GB unit, change it to `0xc0000000` before building.
 
 ---
 
